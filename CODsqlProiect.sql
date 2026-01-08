@@ -409,11 +409,31 @@ SELECT t.idTren, t.tip, v.NumarVagon
 FROM Tren t
 LEFT JOIN Vagon v ON t.idTren = v.idTren;
 
+--Cerinta interogare 6':
+--Afișați toate vagoanele și trenurile lor asociate, 
+--chiar dacă există vagoane care nu corespund unui tren din tabelul Tren
+SELECT t.idTren, t.tip, v.NumarVagon
+FROM Tren t
+RIGHT JOIN Vagon v ON t.idTren = v.idTren;
+
+
 --Interogare 7
 --Cerinta:Sa se afiseze toate garile si trenurile care orpesc in ele(chiar daca nu opreste niciun tren)
 SELECT g.NumeGara, o.idTren, o.oraSosire
 FROM Gara g
 LEFT JOIN Opreste o ON g.NumeGara = o.NumeGara;
+
+--Afisati toate opririle trenurilor si garile lor chiar dacă o oprire nu corespunde unei gări existente în tabelul Gara.
+SELECT g.NumeGara, o.idTren, o.oraSosire
+FROM Gara g
+RIGHT JOIN Opreste o ON g.NumeGara = o.NumeGara;
+
+--Afișați toate trenurile și toate vagoanele lor, chiar dacă 
+--unele trenuri nu au vagoane și unele vagoane nu corespund niciunui tren.
+SELECT t.idTren, t.tip, v.NumarVagon
+FROM Tren t
+FULL OUTER JOIN Vagon v ON t.idTren = v.idTren;
+
 
 --Interogare 8
 --Cerinta: Sa se afiseze numarul de trenuri pentru fiecare operator
