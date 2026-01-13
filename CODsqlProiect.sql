@@ -363,14 +363,14 @@ WHERE NumeOperator IN (
     WHERE NumeOperator = 'RegioTrans'
 );
 
+--------------------------------------JONCTIUNI-----------------------------------------------
+
 --Interogare 1
---Cerință: Pentru fiecare tren, să se afișeze tipul trenului și numărul total de vagoane disponibile.
+--Cerință: Pentru fiecare tren, să se afișeze tipul trenului și numărul total de locuri disponibile din vagoane.
 SELECT t.idTren, t.tip AS TipTren, SUM(v.nrLocuriTotal) AS TotalLocuri
 FROM tren t
 JOIN vagon v ON t.idTren = v.idTren
 GROUP BY t.idTren, t.tip;
-
-select 
 
 --Interogare 2
 --Cerinta: Sa se afiseze numele si prenumele tuturor calatorilor care au cumparat bilete.
@@ -435,6 +435,8 @@ FROM Tren t
 FULL OUTER JOIN Vagon v ON t.idTren = v.idTren;
 
 
+--------------------------------------FUNCTII DE AGREGARE SI GROUP BY-----------------------------------------------
+
 --Interogare 8
 --Cerinta: Sa se afiseze numarul de trenuri pentru fiecare operator
 SELECT NumeOperator, COUNT(*) AS NrTrenuri
@@ -486,6 +488,8 @@ LEFT JOIN Bilet b ON t.idTren = b.idTren
 GROUP BY t.tip
 ORDER BY NrBilete DESC;
 
+--------------------------------------SUBINTEROGARI-IN ,ANY,EXISTS-----------------------------------------------
+--------------------------------------corelate-----------------------------------------------
 --Interogare 15
 --Cerinta: Sa se afiseze calatorii care au cumparat bilete pentru trenurile operate de CFR Calatori
 select c.nume,c.prenume
@@ -513,6 +517,7 @@ where (select count(*)
 
 --Interogare 17
 --Cerinta: Sa se afiseze garile unde lucreaza angajati ce au salariul mai mare decat media angajatilor de la aceeasi gara
+--corelata
 select g.numegara
 from gara g
 where exists(select 1
@@ -532,6 +537,8 @@ from bilet b
 join tren t on t.idtren = v.idtren
 where b.idtren = t.idtren
 and b.pret>50);
+
+---------------------------------------necorelate-------------------------------------
 
 --Interogare 19
 --Sa se afiseze trenurile care au numar de vagoane mai mare decat media tuturor trenurilor
@@ -580,6 +587,7 @@ where c.nrLegitimatie IN (
 
 --Interogare 22
 --Sa se afiseze gările care apar pe rute ce au durată mai mare de 6 ore
+--necorelata
 select numegara
 from gara
 where numegara in (select rg.numegara from ruta_gara rg
@@ -611,6 +619,7 @@ where c.nrLegitimatie = ANY (
     where r.nrStatii > 5
 );
 
+---------2 funcții pe șiruri de caractere, 2 funcții pe datecalendaristice, si acel puțin unei expresii CASE.------
 --Interogare 25
 --Sa se afiseze numele operatorilor cu majuscule
 SELECT UPPER(NumeOperator) AS Operator
@@ -707,7 +716,7 @@ UPDATE V_BileteValabile
 SET status = 'anulat'
 WHERE idBilet = 1;
 
--- Exemplu nepermis
+-- Exemplu nepermis-implica join intre tren si operator
 UPDATE V_TrenOperator
 SET tip = 'InterCity'
 WHERE idTren = 1590;
@@ -722,7 +731,7 @@ CREATE INDEX idx_bilet_status_tren
 ON Bilet (status, idTren);
 
 
---cautare tren dupa ruta
+--cautare tren dupa ruta-
 SELECT t.idTren, t.tip, t.numar, t.clase, t.nrVagoane,
        o.NumeOperator, r.NumeRuta
 FROM Tren t
